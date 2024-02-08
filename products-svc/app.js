@@ -5,6 +5,7 @@ const cors = require('cors');
 
 
 const feTiRoutes = require('./src/routes/feTi.route')
+const cartRoutes = require('./src/routes/cart.route')
 
 const app = express();
 app.use(cors());
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/feTi', feTiRoutes)
+app.use('/cart', cartRoutes)
 
 
 app.use((error, req, res, next) => {

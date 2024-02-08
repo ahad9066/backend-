@@ -35,6 +35,18 @@ exports.getUserById = async (req, res, next) => {
         next(err);
     }
 };
+exports.getUserByIdAfterLogin = async (req, res, next) => {
+    try {
+        console.log("userID", req.user._id)
+        user = await UserService.getById(req.user._id);
+        res.json(serializers.user.userDetails(user))
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
 
 
 

@@ -9,7 +9,9 @@ const router = express.Router();
 
 
 router.get("/", route({ routeName: 'auth:users-list' }), UserController.getUsers);
-router.get("/:id", UserController.getUserById);
+router.get("/loggedInUser", auth(), UserController.getUserByIdAfterLogin);
+router.get("/:id", auth(), UserController.getUserById);
+
 // router.put("/:id", auth(), UserController.updateUser);
 
 module.exports = router;

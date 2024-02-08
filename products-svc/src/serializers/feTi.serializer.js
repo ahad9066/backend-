@@ -13,8 +13,9 @@ module.exports = {
             sizes: subGrade.sizes.map(size => ({
                 id: size.id,
                 name: size.name,
-                stockCount: size.stockCount,
+                stockCount: size.stockCount
             })),
+            price: subGrade.price
         })),
         createdAt: feTiProduct.createdAt,
         updatedAt: feTiProduct.updatedAt,

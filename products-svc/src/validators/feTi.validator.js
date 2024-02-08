@@ -9,7 +9,7 @@ const compositionSchema = Joi.object({
 const sizeSchema = Joi.object({
     id: Joi.string().required(),
     name: Joi.string().required(),
-    stockCount: Joi.number().required(),
+    stockCount: Joi.number().required()
 });
 
 const subGradeSchema = Joi.object({
@@ -17,6 +17,7 @@ const subGradeSchema = Joi.object({
     name: Joi.string().required(),
     composition: Joi.array().items(compositionSchema).required(),
     sizes: Joi.array().items(sizeSchema).required(),
+    price: Joi.number().required()
 });
 
 module.exports = {

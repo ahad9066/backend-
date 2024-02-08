@@ -15,7 +15,7 @@ class UserService {
         return this.model.find().sort(`-created_at`);
     }
     async getById(id) {
-
+        console.log("id", id)
         if (!helpers.db.isObjectIdValid(id)) {
             return Promise.reject({
                 statusCode: 404,

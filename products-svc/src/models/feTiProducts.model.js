@@ -28,7 +28,7 @@ const sizeSchema = new Schema({
     stockCount: {
         type: Number,
         required: true,
-    },
+    }
 });
 
 const subGradeSchema = new Schema({
@@ -42,6 +42,10 @@ const subGradeSchema = new Schema({
     },
     composition: [compositionSchema],
     sizes: [sizeSchema],
+    price: {
+        type: Number,
+        required: true
+    }
 });
 
 const feTiProductsSchema = new Schema(
