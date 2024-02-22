@@ -1,8 +1,8 @@
 module.exports = {
     templates: {
         welcome: {
-            template_id: 'd-fd7c44d8d16e45ca9c1fbd4fcdb8740d',
-            subject: 'Thank you for signing up!',
+            template_id: 'd-798e8de0747a49c0a0a80efd67e6c03d',
+            subject: 'Metalliage inventory user credentials!',
             priority: 2
         },
         password_changed: {

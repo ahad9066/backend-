@@ -13,7 +13,8 @@ module.exports = {
             sizes: subGrade.sizes.map(size => ({
                 id: size.id,
                 name: size.name,
-                stockCount: size.stockCount
+                stockCount: size.stockCount,
+                holdCount: size.holdCount
             })),
             price: subGrade.price
         })),

@@ -18,6 +18,7 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongoose": "^8.1.0",
+    "short-unique-id": "^5.0.3",
     "util": "^0.12.5"
   },
   "devDependencies": {

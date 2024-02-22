@@ -28,6 +28,10 @@ const sizeSchema = new Schema({
     stockCount: {
         type: Number,
         required: true,
+    },
+    holdCount: {
+        type: Number,
+        default: 0
     }
 });
 

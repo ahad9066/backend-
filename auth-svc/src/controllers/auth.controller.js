@@ -50,6 +50,29 @@ exports.login = async (req, res, next) => {
     }
 }
 
+exports.employeeLogin = async (req, res, next) => {
+    try {
+        const schema = Joi.object({
+            username: Joi.alternatives().try(
+                Joi.string().email(),
+                Joi.number().integer().min(1000000000).max(9999999999) // Validate as a 10-digit number
+            ).required(),
+            password: Joi.string().required()
+        });
+        const payload = await JoiController.validateSchema(schema, req.body);
+        const { error: emailError } = Joi.string().email().validate(payload.username);
+        const isUsernameEmail = emailError === undefined;
+        const token = await AuthService.employeeLogin(isUsernameEmail, payload.username, payload.password);
+        res.json(token)
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}
+
+
 exports.changePassword = async (req, res, next) => {
     try {
         const schema = Joi.object({
@@ -96,6 +119,17 @@ exports.logout = async (req, res, next) => {
     try {
         await AuthService.logout(req);
         res.json({ message: 'Logged out successfully!' })
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}
+exports.employeeLogout = async (req, res, next) => {
+    try {
+        await AuthService.logout(req);
+        res.json({ message: 'Employee Logged out successfully!' })
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;

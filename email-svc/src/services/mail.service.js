@@ -2,7 +2,7 @@
 
 const { Email } = require('../libraries');
 
-class MailService  {
+class MailService {
     /**
      * Send email
      * @param {import('../libraries/Email').MailObject} mail - Mail Object
@@ -11,7 +11,18 @@ class MailService  {
      * @returns {Promise} - Promise
      */
     async send(mail, options = {}) {
-        return Email.sendEmail(mail, options);
+        try {
+            console.log("mail service", mail)
+            await Email.sendEmail(mail, options);
+        }
+        catch (err) {
+            console.log("service error", err)
+            throw ({
+                statusCode: 500, message: {
+                    err: err
+                }
+            })
+        }
     }
 }
 

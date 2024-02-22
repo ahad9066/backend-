@@ -2,9 +2,10 @@ const JWT = require("jsonwebtoken");
 const Token = require('../../models/jwt.model');
 const UserModel = require('../../models/user.model')
 const UserService = new (require('../../services/user.service'))
+const EmployeeService = new (require('../../services/employee.service'))
 const serializers = require('../../serializers')
 const { Email } = require('../../shared/libraries');
-const ROLES = require('../../constants/rbac.constants')
+const ROLES = require('../../constants/roles.constants')
 
 
 
@@ -28,13 +29,13 @@ class AuthService {
         }
         console.log('user', user)
         if (!(await UserService.verifyPassword(user, password))) {
-            throw { statusCode: 401, message: "Invalid password" };
+            throw { statusCode: 400, message: "Invalid password" };
         }
-        return this.generateAuthToken(user, isUsernameEmail);
+        return this.generateAuthToken(user, isUsernameEmail, true);
     }
 
     async logout(req) {
-        return this.removeTokenFromRedis(req);
+        return this.removeTokenFromDB(req);
     }
 
     async changePassword(user_id, old_password, new_password) {
@@ -70,13 +71,14 @@ class AuthService {
                 throw { statusCode: 500, message: `Error while sending '${template}' email` };
             });
     }
-    async generateAuthToken(user, isUsernameEmail) {
+    async generateAuthToken(user, isUsernameEmail, isCustomer) {
 
         const data = {
             user: {
                 _id: user._id.toString(),
                 username: user.username,
                 isUsernameEmail: isUsernameEmail,
+                roles: isCustomer ? [ROLES.CUSTOMER] : user.roles
             },
         };
         const token = JWT.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '2h' });
@@ -86,17 +88,31 @@ class AuthService {
             userId: user._id,
             token: token,
             expiration: expirationTime,
+            roles: isCustomer ? [ROLES.CUSTOMER] : user.roles
         };
         const savedToken = await Token.create(tokenData);
-        return {
-            token, userDetails: serializers.user.userDetails(user)
-        };
+        if (isCustomer) {
+            return {
+                token, userDetails: serializers.user.userDetails(user)
+            };
+        } else {
+            return {
+                token, employeeDetails: serializers.employee.employeeDetails(user)
+            };
+        }
+
     }
 
-    async verifyAuthToken(token) {
+    async verifyAuthToken(token, type) {
         try {
             const t = JWT.verify(token, process.env.JWT_SECRET_KEY);
-            const user = await UserService.getById(t.user._id);
+            let user;
+            if (type == 'isEmployee') {
+                user = await EmployeeService.getById(t.user._id);
+            } else {
+                user = await UserService.getById(t.user._id);
+            }
+
             const value = await Token.findOne({ userId: user._id });
             if (!value) {
                 throw { statusCode: 422, message: "Invalid token / expired token" };
@@ -140,7 +156,7 @@ class AuthService {
         return true;
     }
 
-    async removeTokenFromRedis(req) {
+    async removeTokenFromDB(req) {
         try {
             const result = await Token.deleteMany({ userId: req.user._id }).exec();
             if (result.deletedCount > 0) {
@@ -153,6 +169,28 @@ class AuthService {
             // Handle the error
         }
     }
+
+    // Employee login 
+
+    async employeeLogin(isUsernameEmail, username, password) {
+        console.log('username', username)
+        console.log('isUsernameEmail', isUsernameEmail)
+        let employee;
+        if (isUsernameEmail) {
+            employee = await EmployeeService.findByEmail(username);
+        } else {
+            employee = await EmployeeService.findByMobile(username);
+        }
+        if (!employee) {
+            throw ({ statusCode: 404, message: 'Employee not found' })
+        }
+        console.log('employee', employee)
+        if (!(await UserService.verifyPassword(employee, password))) {
+            throw { statusCode: 400, message: "Invalid password" };
+        }
+        return this.generateAuthToken(employee, isUsernameEmail, false);
+    }
+
 }
 
 module.exports = AuthService;

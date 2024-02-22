@@ -1,23 +1,28 @@
 
-const { email } = require('../queues');
-const mailService = new (require('../services/mail.service'));
+const { agenda } = require('../queues/mail.queue');
 
-email.process('send', async (job, done) => {
-    const data_without_attachments = JSON.parse(JSON.stringify(job.data));
+(async () => {
+    await agenda.start();
+    console.log('Agenda started...');
+})();
+// const mailService = new (require('../services/mail.service'));
 
-    if (Array.isArray(data_without_attachments.attachments)) {
-        data_without_attachments.attachments = data_without_attachments.attachments.map(a => {
-            return { filename: a.filename };
-        });
-    }
+// email.process('send', async (job, done) => {
+//     const data_without_attachments = JSON.parse(JSON.stringify(job.data));
+
+//     if (Array.isArray(data_without_attachments.attachments)) {
+//         data_without_attachments.attachments = data_without_attachments.attachments.map(a => {
+//             return { filename: a.filename };
+//         });
+//     }
 
 
-    try {
-        const response = await mailService.send(job.data);
-        console.log('response', response)
-        done();
-    } catch (e) {
-        console.log('queue failed', e)
-        done(e);
-    }
-});
+//     try {
+//         const response = await mailService.send(job.data);
+//         console.log('response', response)
+//         done();
+//     } catch (e) {
+//         console.log('queue failed', e)
+//         done(e);
+//     }
+// });

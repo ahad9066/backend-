@@ -1,7 +1,9 @@
 const axios = require('axios').default;
 const _ = require('lodash');
 
+// const { emailConstants } = require('../../constants/email.constants');
 const { emailConstants } = require('../../constants');
+
 
 const client = axios.create({
     baseURL: process.env.EMAIL_API_BASE_URL,
@@ -13,6 +15,7 @@ class Email {
 
     static async sendTemplate(to, template, template_data, options = {}) {
         try {
+            console.log("emailll", emailConstants, template)
             const email = emailConstants.templates[template];
             console.log('to', to)
             if (!email || !email.template_id) {

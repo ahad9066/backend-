@@ -2,7 +2,7 @@
   "name": "email-svc",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "server": "nodemon src/app.js",
     "worker": "nodemon src/worker.js",
@@ -12,12 +12,14 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
+    "agenda": "^5.0.0",
     "axios": "^0.21.1",
     "bull": "^3.20.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "ioredis": "^4.19.4",
     "joi": "^17.8.1",
+    "node-schedule": "^2.1.1",
     "nodemon": "^2.0.20",
     "redis": "^4.6.4"
   }

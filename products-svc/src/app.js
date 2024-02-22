@@ -4,8 +4,9 @@ const express = require('express');
 const cors = require('cors');
 
 
-const feTiRoutes = require('./src/routes/feTi.route')
-const cartRoutes = require('./src/routes/cart.route')
+const feTiRoutes = require('./routes/feTi.route')
+const cartRoutes = require('./routes/cart.route')
+const orderRoutes = require('./routes/order.route')
 
 const app = express();
 app.use(cors());
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use('/feTi', feTiRoutes)
 app.use('/cart', cartRoutes)
+app.use('/orders', orderRoutes)
 
 
 app.use((error, req, res, next) => {

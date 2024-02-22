@@ -8,6 +8,9 @@ class FeTiService {
     async get() {
         return this.model.find().sort(`-created_at`);
     }
+    async getById(id) {
+        return this.model.findOne({ id: id });
+    }
 
     async addFeTiGrade(payload) {
         try {

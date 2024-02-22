@@ -5,6 +5,9 @@ class CartService {
         this.model = cartModel;
     }
 
+    async getAllCarts() {
+        return this.model.find().sort(`-created_at`);
+    }
     async findByUser(userId) {
         const userCart = await this.model.findOne({ userId: userId });
         if (!userCart) {

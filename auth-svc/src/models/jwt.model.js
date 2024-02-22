@@ -17,6 +17,10 @@ const jwtSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    roles: {
+        type: Array,
+        required: true
+    }
 });
 
 module.exports = mongoose.model("JWT", jwtSchema);
