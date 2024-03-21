@@ -21,10 +21,11 @@ app.use('/auth', authRoutes)
 app.use('/employee', employeeRoutes)
 
 app.use((error, req, res, next) => {
-    console.log('error handler', error)
+    console.log('auth svc error handler', error)
     const status = error.statusCode ? error.statusCode : error.message.statusCode ? error.message.statusCode : 500;
     const message = error.message ? error.message : 'message';
     const errors = error.errors;
+    console.log("auht svccc status", status)
     res.status(status).json({ message: message, errors: errors });
 });
 

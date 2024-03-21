@@ -1,21 +1,24 @@
 const JoiController = require('../shared/controller/joi.controller');
 
 const validators = require("../validators/mail.validator");
-// const agenda = require('../queues/mail.queue');
-const schedule = require('node-schedule');
+// const emailQueue = require('../queues/mail.queue');
+// const agenda = require('../queues/agenda-mail.queue');
+// const schedule = require('node-schedule');
 const mailService = new (require('../services/mail.service'))
 
 class MailController {
     static async send(req, res, next) {
         try {
             console.log('first spot', req.body)
-            const schema = validators.send;
-            const payload = await JoiController.validateSchema(schema, req.body);
+            const payload = req.body;
+            // const schema = validators.send;
+            // const payload = await JoiController.validateSchema(schema, req.body);
             const options = {
                 priority: payload.priority ? payload.priority : 2
             };
+            // await emailQueue.add('send-email', payload, options);
             // await agenda.schedule('now', 'send email', payload);
-            const resp = mailService.send(payload, options)
+            const resp = await mailService.send(payload, options)
             // Schedule the job to send email
             // const job = schedule.scheduleJob('now', async function () {
             //     try {

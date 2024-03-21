@@ -28,5 +28,9 @@ module.exports = {
         status: Joi.string().valid(...Object.values(statusConstants)),
         invoiceFileKey: Joi.string(),
         isInvoiceGenerated: Joi.string(),
-    })
+    }),
+    paymentUpdateSchema: Joi.object({
+        orderId: Joi.string().required(),
+        isPaymentSuccessful: Joi.boolean().required(),
+    }),
 };

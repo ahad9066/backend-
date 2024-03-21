@@ -11,18 +11,18 @@ class MailService {
      * @returns {Promise} - Promise
      */
     async send(mail, options = {}) {
-        try {
-            console.log("mail service", mail)
-            await Email.sendEmail(mail, options);
-        }
-        catch (err) {
-            console.log("service error", err)
-            throw ({
-                statusCode: 500, message: {
-                    err: err
-                }
-            })
-        }
+        // try {
+        console.log("mail service", mail)
+        return Email.sendEmail(mail, options);
+        // }
+        // catch (err) {
+        //     console.log("service error", err)
+        //     throw ({
+        //         statusCode: 500, message: {
+        //             err: err
+        //         }
+        //     })
+        // }
     }
 }
 

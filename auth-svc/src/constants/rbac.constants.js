@@ -37,4 +37,72 @@ module.exports = {
             ROLES.CUSTOMER
         ]
     },
+    'products:placeOrders': {
+        only: [
+            ROLES.CUSTOMER
+        ]
+    },
+    'products:getAllOrders': {
+        only: [
+            ROLES.ADMIN,
+            ROLES.MANAGER,
+            ROLES.SALES,
+        ]
+    },
+    'products:getOrdersByUserId': {
+        only: [
+            ROLES.ADMIN,
+            ROLES.MANAGER,
+            ROLES.SALES,
+            ROLES.CUSTOMER
+        ]
+    },
+    'products:cancelOrder': {
+        only: [
+            ROLES.ADMIN,
+            ROLES.MANAGER,
+            ROLES.SALES,
+            ROLES.CUSTOMER
+        ]
+    },
+    'products:products:updatePayemnt': {
+        only: [
+            ROLES.ADMIN,
+            ROLES.MANAGER,
+            // ROLES.SALES,
+        ]
+    },
+    'products:addFeTiGrade': {
+        only: [
+            ROLES.ADMIN,
+            ROLES.MANAGER,
+            ROLES.SALES,
+        ]
+    },
+    'products:getFeTiProducts': {
+        only: [
+            ROLES.ADMIN,
+            ROLES.MANAGER,
+            ROLES.SALES,
+            ROLES.CUSTOMER
+        ]
+    },
+    'products:addToCart': {
+        only: [
+            ROLES.CUSTOMER
+        ]
+    },
+    'products:getUserCartItems': {
+        only: [
+            ROLES.ADMIN,
+            ROLES.MANAGER,
+            ROLES.SALES,
+            ROLES.CUSTOMER
+        ]
+    },
+    'products:deleteUserCartItems': {
+        only: [
+            ROLES.CUSTOMER
+        ]
+    },
 };

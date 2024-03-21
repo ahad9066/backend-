@@ -37,6 +37,25 @@ exports.getUserCartItems = async (req, res, next) => {
         next(err);
     }
 };
+exports.getAllUserCartItems = async (req, res, next) => {
+    try {
+        let token = req.headers['authorization'];
+        if (token) {
+            token = token.replace('Bearer ', '');
+        }
+        const userCartItems = await CartService.getAllCarts(token);
+        console.log("userCartItems", userCartItems)
+        // res.status(200).json(serializers.cart(userCartItems));
+        res.status(200).json({
+            cartList: userCartItems,
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
 
 exports.deleteUserCartItems = async (req, res, next) => {
     try {

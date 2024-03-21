@@ -47,6 +47,7 @@ class Email {
 
             return this._post('/email/send', payload);
         } catch (err) {
+            console.log("First email block", err)
             throw ({
                 StatusCode: 500, message: {
                     msg: 'Error with email',
@@ -83,7 +84,8 @@ class Email {
     }
 
     static errorHandler(err) {
-        console.log('errrrrrr', err)
+        console.log('email library error1', err.response.data)
+        console.log('email library error2', err.response.data)
         // console.log('reee', {
         //     statusCode: err.response.status,
         //     response: err.response.data,

@@ -13,7 +13,7 @@ exports.getUsers = async (req, res, next) => {
     try {
         const usersList = await UserService.get();
         res.status(200).json({
-            users: usersList.map(serializers.user.signedUpUser),
+            users: usersList.map(serializers.user.userDetails),
         });
 
     } catch (err) {
@@ -23,7 +23,23 @@ exports.getUsers = async (req, res, next) => {
         next(err);
     }
 };
+exports.getSelectedUsers = async (req, res, next) => {
+    try {
+        if (_.size(req.body) === 0) {
+            throw ({ statusCode: 422, message: 'Cannot get empty userIds!' })
+        }
+        const usersList = await UserService.getSelectedUsers(req.body.userIds);
+        res.status(200).json({
+            users: usersList.map(serializers.user.userDetails),
+        });
 
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
 exports.getUserById = async (req, res, next) => {
     try {
         user = await UserService.getById(req.params['id']);

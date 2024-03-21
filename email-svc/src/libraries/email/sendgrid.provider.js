@@ -35,6 +35,7 @@ class SendGrid {
       return email
 
     } catch (err) {
+      console.log("sendgrid error handler", err)
       throw ({
         statusCode: 500, message: {
           msg: 'Soemthing went wrong',

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Invoice</title>
+    <style>
+        /* Your CSS styles for the invoice */
+        body {
+            padding: 0px 20px 20px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+        }
+
+        .image-parent-holder {
+            background: linear-gradient(to right, #CB8152, #885774);
+            min-height: 50px;
+        }
+
+        .image-holder {
+
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            /* justify-content: center; */
+        }
+
+        .image-holder img {
+            width: 400px;
+        }
+
+        address {
+            margin-bottom: 20px;
+        }
+
+        .order-id-container {
+            margin-bottom: 20px;
+        }
+
+        footer {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <!-- Your company logo or name -->
+        <div class="image-parent-holder">
+            <div class="image-holder">
+                <img src="{{{img_src}}}" alt="" />
+                <hr>
+                <!-- <img src="D:\Hameed_project\backend\products-svc\src\shared\libraries\templates\assets\logo.png" alt=""> -->
+            </div>
+        </div>
+        <h1>Invoice</h1>
+        <!-- <img src="./assets/logo.png" alt="Company Logo"> -->
+        <!-- <img src="{{currentDirectory}}/assets/logo.png" alt="Company Logo"> -->
+        <div class="mb-3 d-flex justify-content-between">
+            <div>
+                <strong>From:</strong><br>
+                <address class="px-3">
+                    <!-- Your company address -->
+                    The manager <br>
+                    Metallaige <br>
+                    Phone: +14389864545
+                </address>
+                <div>
+                    <!-- Customer information -->
+                    <strong>To:</strong><br>
+                    <div class="px-3">
+                        {{firstName}}&nbsp;{{lastName}},<br>
+                        {{#if address.unitNumber}}
+                        {{address.unitNumber}},<br>
+                        {{/if}}
+                        {{#if address.buildingNumber}}
+                        {{address.buildingNumber}},<br>
+                        {{/if}}
+                        {{address.streetName}},<br>
+                        {{address.city}}, {{address.province}}<br>
+                        {{address.country}}, {{address.postalCode}}
+                    </div>
+                </div>
+            </div>
+            <div class="fs-3 mt-2 order-id-container">
+                <span><b>Order ID:</b></span>&nbsp; <span>{{orderId}}</span>
+            </div>
+        </div>
+    </header>
+    <main>
+
+        <table class="table ">
+            <thead>
+                <tr>
+                    <!-- <th scope="col">Product Id</th> -->
+                    <th scope="col">Product Name</th>
+                    <!-- <th scope="col">Subgrade Id</th> -->
+                    <th scope="col">Subgrade Name</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through each item in the order and populate the table rows -->
+                {{#each orderItems}}
+                <tr>
+                    <!-- <td class="fw-bold">{{this.product.id}}</td> -->
+                    <td>{{this.product.name}}</td>
+                    <!-- <td>{{this.subGrade.id}}</td> -->
+                    <td>{{this.subGrade.name}}</td>
+                    <td>{{this.size.name}}</td>
+                    <td>{{formatCurrency this.price}}</td>
+                    <td>{{this.quantity}}</td>
+                    <!-- <td>{{../itemsTotal.[@index]}}</td> -->
+                    <td>{{calculateTotal this.price this.quantity}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <div class="text-end mb-4">
+            <p><strong>Total: {{formatCurrency totalAmount}}</strong></p>
+        </div>
+    </main>
+    <footer>
+        <!-- Additional information or terms & conditions -->
+        <hr>
+        <p class="text-center">&copy; 2024 Metalliage. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

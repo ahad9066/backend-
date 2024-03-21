@@ -6,6 +6,6 @@ try {
 
     console.log('worker running')
 } catch (e) {
-   console.log('error while starting worker', e)
+    console.log('error while starting worker', e)
     process.exit(1);
 }

@@ -12,7 +12,11 @@ class UserService {
         this.SALT = 12;
     }
     async get() {
-        return this.model.find().sort(`-created_at`);
+        return this.model.find().sort(`-created_at`).populate('addresses');
+    }
+    async getSelectedUsers(userIds) {
+        const users = await this.model.find({ _id: { $in: userIds } }).populate('addresses');
+        return users;
     }
     async getById(id) {
         console.log("id", id)

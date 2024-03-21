@@ -11,7 +11,7 @@ router.post('/login', route({ routeName: 'auth:login' }), AuthController.login);
 router.post('/employeeLogin', route({ routeName: 'auth:employeeLogin' }), AuthController.employeeLogin);
 router.post('/changePassword', route({ routeName: 'auth:changePassword' }), auth(), AuthController.changePassword);
 router.post('/resetPassword', route({ routeName: 'auth:resetPassword' }), auth(), AuthController.resetPassword);
-// router.get('/permission/:routeName', auth(), AuthController.permission)
+router.get('/permission/:routeName', auth(), permission, AuthController.permission)
 router.get('/logout', auth(), AuthController.logout)
 router.get('/employeeLogout', auth('isEmployee'), AuthController.employeeLogout)
 

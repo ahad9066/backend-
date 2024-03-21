@@ -1,12 +1,37 @@
 const cartModel = require('../models/cart.model')
+const axios = require("axios");
 
+const client = axios.create({
+    baseURL: process.env.AUTH_API_BASE_URL,
+});
 class CartService {
     constructor() {
         this.model = cartModel;
     }
 
-    async getAllCarts() {
-        return this.model.find().sort(`-created_at`);
+    async getAllCarts(token) {
+        const cartItems = await this.model.find().sort(`-created_at`).lean();
+        console.log("Carr", cartItems)
+        const userIds = cartItems.map(item => item.userId);
+        const requestBody = {
+            userIds: userIds
+        };
+        console.log("userIds", userIds)
+        const userDetails = await client.request({
+            url: `/users/selectedUsers`,
+            method: 'post',
+            headers: { Authorization: token, type: 'isEmployee' },
+            data: requestBody
+        });
+        console.log("user", userDetails.data.users)
+        const mergedItems = cartItems.map(cartItem => {
+            const userDetail = userDetails.data.users.find(user => user._id === cartItem.userId);
+            return {
+                ...cartItem,
+                userDetails: userDetail
+            };
+        });
+        return mergedItems;
     }
     async findByUser(userId) {
         const userCart = await this.model.findOne({ userId: userId });

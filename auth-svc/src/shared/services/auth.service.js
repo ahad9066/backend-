@@ -81,9 +81,9 @@ class AuthService {
                 roles: isCustomer ? [ROLES.CUSTOMER] : user.roles
             },
         };
-        const token = JWT.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '2h' });
+        const token = JWT.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '6h' });
         const expirationTime = new Date(); // Set the expiration time for the token
-        expirationTime.setHours(expirationTime.getHours() + 2);
+        expirationTime.setHours(expirationTime.getHours() + 6);
         const tokenData = {
             userId: user._id,
             token: token,
@@ -103,15 +103,21 @@ class AuthService {
 
     }
 
-    async verifyAuthToken(token, type) {
+    async verifyAuthToken(req, token, type) {
         try {
+            console.log("Verifytoken", type, req.headers['from'], req.params['id'])
             const t = JWT.verify(token, process.env.JWT_SECRET_KEY);
             let user;
-            if (type == 'isEmployee') {
-                user = await EmployeeService.getById(t.user._id);
+            if (req.headers['from'] == 'employee') {
+                user = await UserService.getById(req.params['id'])
             } else {
-                user = await UserService.getById(t.user._id);
+                if (type == 'isEmployee') {
+                    user = await EmployeeService.getById(t.user._id);
+                } else {
+                    user = await UserService.getById(t.user._id);
+                }
             }
+
 
             const value = await Token.findOne({ userId: user._id });
             if (!value) {

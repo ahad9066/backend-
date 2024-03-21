@@ -20,7 +20,7 @@ app.use('/orders', orderRoutes)
 
 
 app.use((error, req, res, next) => {
-    console.log('error handler', error)
+    console.log('products svc error handler', error)
     const status = error.statusCode ? error.statusCode : error.message.statusCode ? error.message.statusCode : 500;
     const message = error.message ? error.message : 'message';
     const errors = error.errors;
