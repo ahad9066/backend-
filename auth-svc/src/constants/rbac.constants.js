@@ -81,10 +81,10 @@ module.exports = {
     },
     'products:getFeTiProducts': {
         only: [
-            ROLES.ADMIN,
-            ROLES.MANAGER,
-            ROLES.SALES,
-            ROLES.CUSTOMER
+            // ROLES.ADMIN,
+            // ROLES.MANAGER,
+            // ROLES.SALES,
+            // ROLES.CUSTOMER
         ]
     },
     'products:addToCart': {
