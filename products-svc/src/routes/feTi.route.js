@@ -2,6 +2,7 @@
 const express = require("express");
 const FeTiController = require("../controllers/feTi.controller");
 const auth = require("../shared/middlewares/auth.middleware");
+const route = require('../shared/middlewares/route.middleware')
 const router = express.Router();
 
 
