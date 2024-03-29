@@ -1,4 +1,4 @@
 module.exports = {
-    Email: require('./Email'),
+    Email: require('./email'),
     Queue: require('./queue.library'),
 };
