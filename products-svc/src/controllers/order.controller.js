@@ -34,7 +34,11 @@ exports.placeOrders = async (req, res, next) => {
 }
 exports.cancelOrder = async (req, res, next) => {
     try {
-        const cancelledOrder = await OrderService.cancelOrder(req.params['orderId'], req.user);
+        let token = req.headers['authorization'];
+        if (token) {
+            token = token.replace('Bearer ', '');
+        }
+        const cancelledOrder = await OrderService.cancelOrder(req.params['orderId'], req.user,token);
         console.log("orderrr", cancelledOrder)
         res.json(serializers.order.orderDetails(cancelledOrder))
     } catch (err) {

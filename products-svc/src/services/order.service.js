@@ -105,7 +105,7 @@ class OrderService {
         }
     }
 
-    async cancelOrder(orderId, user) {
+    async cancelOrder(orderId, user,token) {
         try {
             const userDetails = await client.request({
                 url: `/users/${user._id}`,
@@ -143,7 +143,7 @@ class OrderService {
             this.sendEmail('order_cancelled', { email: userDetails.data.email },
                 {
                     firstName: userDetails.data.firstName,
-                    totalAmount: newOrder.totalAmount,
+                    totalAmount: updatedOrder.totalAmount,
                     orderId: orderId
                 });
             return updatedOrder;
