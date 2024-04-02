@@ -5,7 +5,7 @@ const { Email } = require('../libraries');
 class MailService {
     /**
      * Send email
-     * @param {import('../libraries/Email').MailObject} mail - Mail Object
+     * @param {import('../libraries/email').MailObject} mail - Mail Object
      * @param {Object} options - Options
      * @param {String} options.provider - Service provider
      * @returns {Promise} - Promise

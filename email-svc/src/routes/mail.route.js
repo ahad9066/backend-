@@ -7,5 +7,6 @@ router.post(
     '/send',
     MailController.send
 );
+router.get("/health", MailController.health);
 
 module.exports = router;

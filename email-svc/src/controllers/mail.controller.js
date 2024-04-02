@@ -38,6 +38,10 @@ class MailController {
             next(err);
         }
     }
+    static health(req, res, next) {
+        return res.status(200).json({ message: 'Email svc is running' })
+
+    }
 }
 
 module.exports = MailController;

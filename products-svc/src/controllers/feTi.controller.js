@@ -7,6 +7,9 @@ const serializers = require("../serializers");
 const _ = require('lodash')
 
 
+exports.health = async (req, res, next) => {
+    return res.status(200).json({ message: 'Products svc is running' })
+}
 
 exports.addFeTiGrade = async (req, res, next) => {
     try {
