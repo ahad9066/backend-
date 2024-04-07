@@ -43,7 +43,19 @@ module.exports = async function generateInvoicePDF(data) {
     try {
         data.img_src = base64img.base64Sync(path.join(__dirname, 'templates/assets/logo.png'));
         // Launch Puppeteer browser
-        const browser = await puppeteer.launch();
+        // const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            args: [
+                "--disable-setuid-sandbox",
+                "--no-sandbox",
+                "--single-process",
+                "--no-zygote",
+            ],
+            executablePath:
+                process.env.NODE_ENV === "production"
+                    ? process.env.PUPPETEER_EXECUTABLE_PATH
+                    : puppeteer.executablePath(),
+        });
         const page = await browser.newPage();
         // Generate HTML content
         const htmlContent = generateInvoiceHTML(data);
