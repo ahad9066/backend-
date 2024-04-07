@@ -67,13 +67,13 @@ module.exports = async function generateInvoicePDF(data) {
 
         // Close Puppeteer browser
         await browser.close();
-        const directoryPath = __dirname;
+        // const directoryPath = __dirname;
         // const templatePath = path.join(directoryPath, `invoices/${data.orderId}.pdf`);
-        const templatePath = `/usr/src/app/src/shared/libraries/invoices/${data.orderId}.pdf`;
-        fs.writeFileSync(templatePath, pdfBuffer);
+        // const templatePath = `/usr/src/app/src/shared/libraries/invoices/${data.orderId}.pdf`;
+        // fs.writeFileSync(templatePath, pdfBuffer);
         return {
             pdfBuffer: pdfBuffer,
-            templatePath: templatePath,
+            templatePath: '',
             fileName: data.orderId + '.pdf'
         };
     } catch (error) {

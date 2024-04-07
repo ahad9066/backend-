@@ -15,7 +15,7 @@ class ResultsService {
         try {
             console.log('payload', payload)
             const awsResponse = await AwsS3.uploadFile(payload.fileBuffer, payload.folderName, payload.fileName);
-            await this.removeLocalFile(payload.templatePath);
+            // await this.removeLocalFile(payload.templatePath);
             return awsResponse;
         }
         catch (err) {

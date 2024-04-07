@@ -257,7 +257,7 @@ class OrderService {
             const awsResponse = await invoiceService.uploadFile({
                 fileBuffer: pdfBuffer,
                 folderName: 'invoices',
-                templatePath: templatePath,
+                // templatePath: templatePath,
                 fileName: fileName
             })
             console.log("awsResponse", awsResponse.key)
