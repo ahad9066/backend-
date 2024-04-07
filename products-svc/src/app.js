@@ -10,7 +10,17 @@ const orderRoutes = require('./routes/order.route')
 const rawMaterialRoutes = require('./routes/rawMaterial.route')
 
 const app = express();
-app.use(cors());
+// const corsOptions = {
+//     origin: '*', // Allow requests from all origins
+//     methods: '*', // Allow all HTTP methods
+//     allowedHeaders: '*', // Allow all headers
+// };
+const corsOptions = {
+    origin: ['https://metalliage-inventory.onrender.com', 'https://metalliage.onrender.com'], // Allow requests only from these origins
+    methods: '*', // Allow all HTTP methods
+    allowedHeaders: '*', // Allow all headers
+};
+app.use(cors(corsOptions));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
