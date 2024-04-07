@@ -16,25 +16,25 @@ class Email {
     static async sendTemplate(to, template, template_data, options = {}) {
         try {
             console.log("emailll", emailConstants, template)
-            const email = emailConstants.templates[template];
-            console.log('to', to)
-            if (!email || !email.template_id) {
-                throw new Error(`Template '${template}' does not exist!`);
-            }
+            // const email = emailConstants.templates[template];
+            // console.log('to', to)
+            // if (!email || !email.template_id) {
+            //     throw new Error(`Template '${template}' does not exist!`);
+            // }
             const payload = {
                 from: !!options.from ? options.from : process.env.EMAIL_FROM_ADDRESS,
                 to: to,
                 cc: !!options.cc ? options.cc : [],
                 reply_to: !!options.reply_to ? options.reply_to : process.env.REPLY_TO_EMAIL,
-                subject: email.subject,
+                // subject: email.subject,
                 attachments: Array.isArray(options.attachments) && options.attachments.length > 0 ? options.attachments : undefined,
-                template_id: email.template_id,
+                template_id: template,
                 template_data: {
                     recipient: to,
 
                     ...template_data
                 },
-                priority: email.priority
+                // priority: email.priority
             };
             const payload_without_attachments = JSON.parse(JSON.stringify(payload));
 

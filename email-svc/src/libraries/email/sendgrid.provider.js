@@ -32,6 +32,7 @@ class SendGrid {
         subject: mail.subject,
       };
       const email = await sgMail.send(payload3);
+      console.log("endgrid response", email)
       return email
 
     } catch (err) {

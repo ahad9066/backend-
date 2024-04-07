@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Credentials welcome email</title>
+</head>
+
+<body>
+    <h1>Hey {{ firstName }} {{lastName}},</h1>
+    <p style="margin-bottom: 20px;">Please find below your user Credentials:</p>
+    <div style="font-weight: bold;">
+        <div><span>Username: &nbsp;</span> <span>{{recipient}}</span></div>
+        <div><span>Password: &nbsp;</span> <span>{{password}}</span></div>
+    </div>
+    <div style="margin-top: 40px;">
+        Thanks and regards,
+    </div>
+    <div>
+        Metalliage Admin
+    </div>
+</body>
+
+</html>

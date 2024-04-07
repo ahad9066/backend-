@@ -2,6 +2,7 @@ const orderModel = require('../models/orders.model')
 const ShortUniqueId = require('short-unique-id');
 const STATUS = require('../constants/status.constants');
 const FeTiService = new (require("../services/feTi.service"));
+const RawMaterialsService = new (require("../services/rawMaterial.service"));
 const invoiceService = new (require('../services/invoice.service'));
 const { Email } = require('../shared/libraries');
 const axios = require("axios");
@@ -9,7 +10,40 @@ const generateInvoicePDF = require('../shared/libraries/puppeteer')
 const mime = require('mime');
 
 
-
+const ProductRatio = {
+    MET_101_68_STD_10_50: [1, 0.5, 0.3, 0.37],
+    MET_101_68_MED_10_30: [1, 0.5, 0.3, 0.37],
+    MET_101_68_SML_4_10: [1, 0.5, 0.3, 0.37],
+    MET_101_68_FIN_0_2: [1, 0.5, 0.3, 0.37],
+    MET_101_72_STD_10_50: [1, 0.5, 0.3, 0.37],
+    MET_101_72_MED_10_30: [1, 0.5, 0.3, 0.37],
+    MET_101_72_SML_4_10: [1, 0.5, 0.3, 0.37],
+    MET_101_72_FIN_0_2: [1, 0.5, 0.3, 0.37],
+    MET_121_68_STD_10_50: [0.7, 1, 0.3, 0.37],
+    MET_121_68_MED_10_30: [0.7, 1, 0.3, 0.37],
+    MET_121_68_SML_4_10: [0.7, 1, 0.3, 0.37],
+    MET_121_68_FIN_0_2: [0.7, 1, 0.3, 0.37],
+    MET_121_72_STD_10_50: [0.7, 1, 0.3, 0.37],
+    MET_121_72_MED_10_30: [0.7, 1, 0.3, 0.37],
+    MET_121_72_SML_4_10: [0.7, 1, 0.3, 0.37],
+    MET_121_72_FIN_0_2: [0.7, 1, 0.3, 0.37],
+    MET_131_68_STD_10_50: [0.8, 0.2, 0.3, 0.7],
+    MET_131_68_MED_10_30: [0.8, 0.2, 0.3, 0.7],
+    MET_131_68_SML_4_10: [0.8, 0.2, 0.3, 0.7],
+    MET_131_68_FIN_0_2: [0.8, 0.2, 0.3, 0.7],
+    MET_131_72_STD_10_50: [0.8, 0.2, 0.3, 0.7],
+    MET_131_72_MED_10_30: [0.8, 0.2, 0.3, 0.7],
+    MET_131_72_SML_4_10: [0.8, 0.2, 0.3, 0.7],
+    MET_131_72_FIN_0_2: [0.8, 0.2, 0.3, 0.7],
+    MET_171_68_STD_10_50: [0.7, 0.3, 0.3, 0.6],
+    MET_171_68_MED_10_30: [0.7, 0.3, 0.3, 0.6],
+    MET_171_68_SML_4_10: [0.7, 0.3, 0.3, 0.6],
+    MET_171_68_FIN_0_2: [0.7, 0.3, 0.3, 0.6],
+    MET_171_72_STD_10_50: [0.7, 0.3, 0.3, 0.6],
+    MET_171_72_MED_10_30: [0.7, 0.3, 0.3, 0.6],
+    MET_171_72_SML_4_10: [0.7, 0.3, 0.3, 0.6],
+    MET_171_72_FIN_0_2: [0.7, 0.3, 0.3, 0.6],
+}
 
 const client = axios.create({
     baseURL: process.env.AUTH_API_BASE_URL,
@@ -47,6 +81,7 @@ class OrderService {
                 method: 'get',
                 headers: { Authorization: token, type: 'isCustomer' },
             });
+            const rawMat = await RawMaterialsService.get();
             console.log("userDetails", userDetails.data)
             const uid = new ShortUniqueId();
             const orderId = 'MET_' + uid.rnd();
@@ -77,6 +112,15 @@ class OrderService {
                 size.stockCount -= item.quantity;
                 size.holdCount += item.quantity;
                 await product.save();
+                const ratio = ProductRatio[subGrade.id + '_' + size.id];
+                console.log("ratio", ratio, subGrade.id + '_' + size.id)
+                for (let i = 0; i < rawMat.length; i++) {
+                    console.log("quantitt", item.quantity)
+                    rawMat[i].stockCount -= ratio[i] * item.quantity;
+                    rawMat[i].holdCount += ratio[i] * item.quantity;
+                    await rawMat[i].save();
+                }
+
             }
             const newOrder = await this.model.create({
                 ...payload,
@@ -87,6 +131,15 @@ class OrderService {
                 lastName: userDetails.data.lastName,
                 address: userDetails.data.addresses.find(address => address._id == payload.addressId)
             });
+            const requestRawMat = [];
+            for (let i = 0; i < rawMat.length; i++) {
+                if (rawMat[i].stockCount < 1000 || rawMat[i].stockCount < 2000) {
+                    requestRawMat.push({
+                        rawMaterialName: rawMat[i].name,
+                        quantity: 1000
+                    })
+                }
+            }
             // console.log("newOrder", newOrder);
             this.sendEmail('make_payment', { email: userDetails.data.email },
                 {
@@ -94,6 +147,14 @@ class OrderService {
                     totalAmount: newOrder.totalAmount,
                     orderId: orderId
                 });
+            if (requestRawMat.length > 0) {
+                this.sendEmail('supplier_stock', { email: 'shamsafrinayesha02@gmail.com' },
+                    {
+                        firstName: userDetails.data.firstName,
+                        orders: requestRawMat
+                    });
+            }
+
             return newOrder;
         } catch (err) {
             // console.log("place order err handler", err.response)
@@ -105,13 +166,14 @@ class OrderService {
         }
     }
 
-    async cancelOrder(orderId, user,token) {
+    async cancelOrder(orderId, user, token) {
         try {
             const userDetails = await client.request({
                 url: `/users/${user._id}`,
                 method: 'get',
                 headers: { Authorization: token, type: 'isCustomer' },
             });
+            const rawMat = await RawMaterialsService.get();
             const updatedOrder = await this.model.findOneAndUpdate(
                 { orderId: orderId }, // Filter criteria to find the order
                 { status: STATUS.ORDER_CANCELLED }, // Update to the status field
@@ -139,8 +201,16 @@ class OrderService {
                 size.stockCount += item.quantity;
                 size.holdCount -= item.quantity;
                 await product.save();
+                const ratio = ProductRatio[subGrade.id + '_' + size.id];
+                console.log("ratio", ratio, subGrade.id + '_' + size.id)
+                for (let i = 0; i < rawMat.length; i++) {
+                    console.log("quantitt", item.quantity)
+                    rawMat[i].stockCount += ratio[i] * item.quantity;
+                    rawMat[i].holdCount -= ratio[i] * item.quantity;
+                    await rawMat[i].save();
+                }
             }
-            this.sendEmail('order_cancelled', { email: userDetails.data.email },
+            this.sendEmail('cancel_order', { email: userDetails.data.email },
                 {
                     firstName: userDetails.data.firstName,
                     totalAmount: updatedOrder.totalAmount,
@@ -161,6 +231,7 @@ class OrderService {
         try {
 
             const updatedOrder = await this.model.find({ orderId: orderId }).lean();
+            const rawMat = await RawMaterialsService.get();
             const userId = updatedOrder[0].userId.toString();
             console.log("userId", userId)
             const userDetails = await client.request({
@@ -228,15 +299,25 @@ class OrderService {
                 // decrease holdCount
                 size.holdCount -= item.quantity;
                 await product.save();
+                const ratio = ProductRatio[subGrade.id + '_' + size.id];
+                console.log("ratio", ratio, subGrade.id + '_' + size.id)
+                for (let i = 0; i < rawMat.length; i++) {
+                    console.log("quantitt", item.quantity)
+                    rawMat[i].holdCount -= ratio[i] * item.quantity;
+                    await rawMat[i].save();
+                }
             }
-            this.sendEmailWithAttachment('order_confirmed',
+
+            this.sendEmailWithAttachment('order_placed',
                 { email: userDetails.data.email },
                 {
                     firstName: userDetails.data.firstName,
                     totalAmount: `$${parseFloat(updatedOrder[0].totalAmount).toFixed(2)}`,
                     orderId: updatedOrder[0].orderId,
                 }, attachment);
+
             return updatedPaymentOrder;
+            // return updatedOrder
         } catch (err) {
             console.log("servie err", err)
         }

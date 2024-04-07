@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment pending email</title>
+</head>
+
+<body>
+    <h1>Hi {{ firstName }},</h1>
+    <h1 style="text-align: center;margin-bottom: 20px;">Your order is waiting for payment!</h1>
+    <h4 style="margin-bottom: 20px; text-align: center; font-size: 20px;">
+        Your order {{orderId}} is now waiting for payment confirmation. </h4>
+    <h4 style="margin-bottom: 20px; text-align: center; font-size: 20px;">
+        Please transfer your total amount {{totalAmount}} CAD to the below bank details.</h4>
+    <div style="font-weight: bold; margin-top: 40px;font-size: 20px;">
+        <div> <b>Bank Name: CIBC</b></div>
+        <div><b>Account Number: CB2329842016310034</b></div>
+        <div><b>Account Holder's Name: Metallaige</b></div>
+        <div><b>Routing Number: 60987</b></div>
+    </div>
+    <div style="text-align: center;margin-bottom: 40px;"><b>Please reply to this email, in case of further details.</b>
+    </div>
+    <div style="margin-top: 40px;font-size: 20px;">
+        Thanks and regards,
+    </div>
+    <div style="font-size: 20px;">
+        Metalliage
+    </div>
+</body>
+
+</html>
