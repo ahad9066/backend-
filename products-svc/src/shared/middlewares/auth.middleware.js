@@ -8,7 +8,6 @@ const client = axios.create({
 module.exports = (options = { routeName }) => async (req, res, next) => {
     try {
         console.log("header tyoe", req.headers['type'])
-        // let type = req.headers['referer']
         const permission = await client.request({
             url: `/auth/permission/${options.routeName}`,
             method: 'get',
