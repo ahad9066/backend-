@@ -69,7 +69,7 @@ module.exports = async function generateInvoicePDF(data) {
         await browser.close();
         const directoryPath = __dirname;
         // const templatePath = path.join(directoryPath, `invoices/${data.orderId}.pdf`);
-        const templatePath = `/invoices/${data.orderId}.pdf`;
+        const templatePath = `/usr/src/app/src/shared/libraries/invoices/${data.orderId}.pdf`;
         fs.writeFileSync(templatePath, pdfBuffer);
         return {
             pdfBuffer: pdfBuffer,
