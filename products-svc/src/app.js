@@ -17,7 +17,7 @@ const app = express();
 // };
 const corsOptions = {
     origin: ['https://metalliage-inventory.onrender.com', 'https://metalliage.onrender.com'], // Allow requests only from these origins
-    methods: '*', // Allow all HTTP methods
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow all HTTP methods
     allowedHeaders: '*', // Allow all headers
 };
 app.use(cors(corsOptions));
